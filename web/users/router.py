@@ -8,14 +8,21 @@ from web.users.models import Users
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/{key}")
+@router.get("/")
+async def get_users_info():
+    """
+    Эндпоинт получения всех пользователей
+    """
+    return await UserDAO.get_all()
+
+
+@router.get("user/{key}")
 async def get_user_info(key: int) -> UserResponseDto:
     """
     Эндпоинт получения пользователя
     """
     
     return await UserDAO.get_by_id(key)
-
 
 
 @router.post("/register")
@@ -37,3 +44,7 @@ async def registrate_user(dto: UserRequestDto):
     )
     
     await UserDAO.add(**response.model_dump())
+    
+@router.delete("/delete")
+async def delete_user(id: int):
+    await UserDAO.delete(id)
