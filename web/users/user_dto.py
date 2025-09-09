@@ -72,7 +72,7 @@ class UserRequestDto(BaseModel):
 
         cls.age = age
 
-        return value
+        return value.date()
 
     @field_validator("firstname", "lastname", "middlename")
     @classmethod

@@ -1,34 +1,25 @@
 from fastapi import APIRouter
 from datetime import datetime
+from web.users.dao import UserDAO
 from web.users.user_dto import UserRequestDto, UserResponseDto
+from web.users.models import Users
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/{key}")
-def get_user_info(key: int) -> UserResponseDto:
+async def get_user_info(key: int) -> UserResponseDto:
     """
     Эндпоинт получения пользователя
     """
-
-    response = UserResponseDto(
-        firstname="testov",
-        lastname="test",
-        middlename=None,
-        email="test.api@api.com",
-        tel="+7-981-555-45-17",
-        birthday=datetime(1990, 3, 10),
-        login=f"testov_{key}",
-        age=25,
-        reg_date=datetime(9999, 3, 10),
-    )
-
-    return response
+    
+    return await UserDAO.get_by_id(key)
 
 
-@router.post("/")
-def registrate_user(dto: UserRequestDto) -> UserResponseDto:
+
+@router.post("/register")
+async def registrate_user(dto: UserRequestDto):
     """
     Эндпоинт регистрации пользователя
     """
@@ -44,5 +35,5 @@ def registrate_user(dto: UserRequestDto) -> UserResponseDto:
         age=dto.age,
         reg_date=datetime.now(),
     )
-
-    return response
+    
+    await UserDAO.add(**response.model_dump())
