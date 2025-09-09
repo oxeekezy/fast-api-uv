@@ -4,7 +4,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
-
 class RussianPhoneNumber(PhoneNumber):
     """
     Класс для описания номера Российского номера телефона
@@ -40,7 +39,7 @@ class UserRequestDto(BaseModel):
 
     @field_validator("tel", mode="before")
     @classmethod
-    def phone_validator(cls, value: str):
+    def phone_validator(cls, value: str) -> RussianPhoneNumber | None:
         """
         Валидация логина пользователя
 
