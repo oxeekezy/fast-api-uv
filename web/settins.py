@@ -10,9 +10,9 @@ class Settings(BaseSettings):
     @property
     def database_url(self):
         user = f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
-        database = f'{self.POSTGRES_HOST}:{self.POSTGRES_HOST}/{self.POSTGRES_DB}'
+        database = f'{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
         
-        return f'postgres+asyncpg://{user}@{database}'
+        return f'postgresql+asyncpg://{user}@{database}'
     
     class Config:
         env_file = ".env"
