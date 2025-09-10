@@ -14,8 +14,8 @@ class UsersAdminView(ModelView, model=UserModel):
         UserModel.email,
         UserModel.login
     ]
-    form_excluded_columns = [
+    column_details_exclude_list = [
         UserModel.password
     ]
-    
+        
     
