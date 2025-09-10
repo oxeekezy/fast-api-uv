@@ -11,7 +11,7 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 SECURITY = [Depends(get_bearer_token)]
 
 
-@router.get("/")
+@router.get("")
 async def get_all() -> Sequence[CourseResponseDto]:
     """Эндпоинт получения всех курсов
 
@@ -19,6 +19,15 @@ async def get_all() -> Sequence[CourseResponseDto]:
         Sequence[CourseResponseDto]: Список курсов
     """
     return await CourseDAO.get_all()
+
+@router.get("/{id}")
+async def get_by_id(id: int) -> CourseResponseDto | None:
+    """Эндпоинт получения всех курсов
+
+    Returns:
+        Sequence[CourseResponseDto]: Список курсов
+    """
+    return await CourseDAO.get_by_id(id)
 
 @router.post("/add", status_code=201)
 async def add_course(dto: CourseRequestDto):
