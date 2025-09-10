@@ -7,6 +7,11 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_DB: str
     
+    PASS_CRYPT_SCHEMES:list
+    
+    SECRET_KEY: str
+    JWT_ALG:str
+    
     @property
     def database_url(self):
         user = f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'

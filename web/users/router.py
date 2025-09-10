@@ -1,11 +1,14 @@
 from typing import Any, Sequence, Annotated
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query, Request, Response
 from datetime import datetime
 
 from web.users.dao import UserDAO
-from web.users.user_dto import UserRequestByParamsDto, UserRequestDto, UserResponseDto
+from web.users.user_dto import UserLoginRequestDto, UserRequestByParamsDto, UserRequestDto, UserResponseDto
 from web.users.models import Users
 from web.exceptions import UserExistException
+
+from web.users.auth import auth_user, create_token, get_password_hash
+from web.users.deps import get_user_from_token
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -45,7 +48,9 @@ async def registrate_user(dto: UserRequestDto) -> UserResponseDto:
     exsited = await UserDAO.get_by_params(email=dto.email)
     if exsited:
         raise UserExistException
-
+    
+    hashed_pwd = get_password_hash(dto.password)
+    
     response = UserResponseDto(
         firstname=dto.firstname,
         lastname=dto.lastname,
@@ -56,12 +61,26 @@ async def registrate_user(dto: UserRequestDto) -> UserResponseDto:
         login=dto.login,
         age=dto.age,
         reg_date=datetime.now(),
-        password=dto.password
+        password=hashed_pwd
     )
     
     await UserDAO.add(**response.model_dump())
     return response
     
-@router.delete("/delete")
+@router.delete("/delete", status_code=200)
 async def delete_user(id: int):
     await UserDAO.delete(id)
+    
+@router.post("/login")
+async def login(response: Response, dto: UserLoginRequestDto):
+    user = await auth_user(dto.email, dto.password)
+    access_token = create_token({"sub": str(user.id)})
+    response.set_cookie("access_token", access_token)
+
+    return {"access_token": access_token}
+
+@router.post("/me")
+async def get_user_from_token(user: str = Depends(get_user_from_token)) -> UserResponseDto:
+    return user
+    
+    

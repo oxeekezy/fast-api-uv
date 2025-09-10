@@ -11,3 +11,15 @@ class BaseException(HTTPException):
 class UserExistException(BaseException):
     status_code = status.HTTP_409_CONFLICT
     detail="Пользователь уже существует"
+    
+class UserAuthFailed(BaseException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail="Неправильный логин или пароль"
+    
+class TokenExpired(BaseException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail="Время жизни JWT токена истекло или он отсутствует"
+    
+class TokenDecodeExcept(BaseException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail="Проблема вовремя декодирования токена"
