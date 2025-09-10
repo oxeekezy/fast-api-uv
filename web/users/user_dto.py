@@ -26,7 +26,8 @@ class UserRequestDto(BaseModel):
     tel: Optional[RussianPhoneNumber]
     birthday: datetime
     login: str
-    #password: str
+    
+    password: str
 
     @field_validator("login")
     @classmethod

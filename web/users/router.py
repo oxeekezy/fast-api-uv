@@ -1,5 +1,7 @@
+from typing import Any, Sequence
 from fastapi import APIRouter
 from datetime import datetime
+
 from web.users.dao import UserDAO
 from web.users.user_dto import UserRequestDto, UserResponseDto
 from web.users.models import Users
@@ -10,14 +12,14 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/")
-async def get_users_info():
+async def get_users_info()-> Sequence[UserResponseDto]:
     """
     Эндпоинт получения всех пользователей
     """
     return await UserDAO.get_all()
 
 @router.get("/get_by_params")
-async def get_users_info_by_params(login:str="", email:str="", tel: str="", age:int=0):
+async def get_users_info_by_params(login:str="", email:str="", tel: str="", age:int=0) -> Sequence[UserResponseDto]: 
     """
     Эндпоинт получения пользователей  по параметрам
     """
@@ -44,7 +46,7 @@ async def get_user_info(key: int) -> UserResponseDto:
 
 
 @router.post("/register", status_code=201)
-async def registrate_user(dto: UserRequestDto):
+async def registrate_user(dto: UserRequestDto) -> UserResponseDto:
     """
     Эндпоинт регистрации пользователя
     """
@@ -67,6 +69,7 @@ async def registrate_user(dto: UserRequestDto):
     )
     
     await UserDAO.add(**response.model_dump())
+    return response
     
 @router.delete("/delete")
 async def delete_user(id: int):

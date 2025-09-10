@@ -18,3 +18,5 @@ class Users(Base):
     tel = Column(String, nullable=True)
     reg_date = Column(DateTime, nullable=True)
     
+    password = Column(String, nullable=False)
+    
