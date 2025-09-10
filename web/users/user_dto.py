@@ -102,7 +102,12 @@ class UserResponseDto(BaseModel):
     tel: Optional[RussianPhoneNumber]
     birthday: datetime
     login: str
-    password: str
 
     age: int
     reg_date: datetime
+    
+class UserRequestByParamsDto(BaseModel):
+    login: Optional[str] = None
+    email: Optional[str] = None
+    tel: Optional[str] = None
+    age: Optional[int] = None

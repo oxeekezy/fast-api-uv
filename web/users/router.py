@@ -1,9 +1,9 @@
-from typing import Any, Sequence
-from fastapi import APIRouter
+from typing import Any, Sequence, Annotated
+from fastapi import APIRouter, Query
 from datetime import datetime
 
 from web.users.dao import UserDAO
-from web.users.user_dto import UserRequestDto, UserResponseDto
+from web.users.user_dto import UserRequestByParamsDto, UserRequestDto, UserResponseDto
 from web.users.models import Users
 from web.exceptions import UserExistException
 
@@ -19,21 +19,12 @@ async def get_users_info()-> Sequence[UserResponseDto]:
     return await UserDAO.get_all()
 
 @router.get("/get_by_params")
-async def get_users_info_by_params(login:str="", email:str="", tel: str="", age:int=0) -> Sequence[UserResponseDto]: 
+async def get_users_info_by_params(user: Annotated[UserRequestByParamsDto, Query()] ) -> Sequence[UserResponseDto]: 
     """
     Эндпоинт получения пользователей  по параметрам
     """
-    query_params = {}
-    if login:
-        query_params['login']=login
-    if email:
-        query_params['email']=email
-    if tel:
-        query_params['tel']=tel
-    if age:
-        query_params['age']=age
     
-    return await UserDAO.get_by_params(**query_params)
+    return await UserDAO.get_by_params(**user.model_dump(exclude_defaults=True, exclude_unset=True, exclude_none=True))
 
 
 @router.get("/user/{key}")
