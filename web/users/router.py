@@ -5,7 +5,7 @@ from datetime import datetime
 from web.auth.scheme import get_bearer_token
 from web.users.dao import UserDAO
 from web.users.user_dto import UserLoginRequestDto, UserRequestByParamsDto, UserRequestDto, UserResponseDto
-from web.users.models import Users
+from web.users.models import UserModel
 from web.exceptions import UserExistException
 
 from web.users.auth import auth_user, create_token, get_password_hash

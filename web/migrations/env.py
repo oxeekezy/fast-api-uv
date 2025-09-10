@@ -11,7 +11,7 @@ from alembic import context
 from web.database import Base
 from web.settings import settings
 
-from web.users.models import Users
+from web.users.models import UserModel
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 

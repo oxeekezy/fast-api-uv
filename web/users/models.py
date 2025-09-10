@@ -2,7 +2,7 @@ from web.database import Base
 from sqlalchemy import Column, Integer, String, DateTime
 
 
-class Users(Base):
+class UserModel(Base):
     __tablename__="users"
     
     id = Column(Integer, primary_key=True)
@@ -19,4 +19,5 @@ class Users(Base):
     reg_date = Column(DateTime, nullable=True)
     
     password = Column(String, nullable=False)
+    
     

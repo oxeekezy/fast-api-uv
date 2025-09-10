@@ -1,12 +1,12 @@
 from pydantic import EmailStr
 from web.dao.base import BaseDAO
-from web.users.models import Users
+from web.users.models import UserModel
 
 
 class UserDAO(BaseDAO):
-    model = Users
+    model = UserModel
     
-    async def get_user_by_email(email: EmailStr) -> Users | None:
+    async def get_user_by_email(email: EmailStr) -> UserModel | None:
         result = await UserDAO.get_by_params(email=email)
         if result:
             return result[0]
