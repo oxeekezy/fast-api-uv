@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     JWT_ALG:str
     
+    BEARER_TOKEN: str
+    
     @property
     def database_url(self):
         user = f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'

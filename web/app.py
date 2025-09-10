@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+from web.auth.scheme import get_bearer_token
 from web.users.router import router
 from random import randint
 from time import sleep
@@ -6,6 +7,7 @@ from asyncio import sleep as asleep
 
 
 app = FastAPI()
+
 app.include_router(router)
 
 

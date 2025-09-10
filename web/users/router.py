@@ -2,6 +2,7 @@ from typing import Any, Sequence, Annotated
 from fastapi import APIRouter, Depends, Query, Request, Response
 from datetime import datetime
 
+from web.auth.scheme import get_bearer_token
 from web.users.dao import UserDAO
 from web.users.user_dto import UserLoginRequestDto, UserRequestByParamsDto, UserRequestDto, UserResponseDto
 from web.users.models import Users
@@ -13,16 +14,17 @@ from web.users.deps import get_user_from_token
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
+SECURITY = [Depends(get_bearer_token)]
 
-@router.get("/")
+@router.get("/", dependencies=SECURITY)
 async def get_users_info()-> Sequence[UserResponseDto]:
     """
     Эндпоинт получения всех пользователей
     """
     return await UserDAO.get_all()
 
-@router.get("/get_by_params")
-async def get_users_info_by_params(user: Annotated[UserRequestByParamsDto, Query()] ) -> Sequence[UserResponseDto]: 
+@router.get("/get_by_params", dependencies=SECURITY)
+async def get_users_info_by_params(user: Annotated[UserRequestByParamsDto, Query()]) -> Sequence[UserResponseDto]: 
     """
     Эндпоинт получения пользователей  по параметрам
     """
@@ -30,7 +32,7 @@ async def get_users_info_by_params(user: Annotated[UserRequestByParamsDto, Query
     return await UserDAO.get_by_params(**user.model_dump(exclude_defaults=True, exclude_unset=True, exclude_none=True))
 
 
-@router.get("/user/{key}")
+@router.get("/user/{key}", dependencies=SECURITY)
 async def get_user_info(key: int) -> UserResponseDto:
     """
     Эндпоинт получения пользователя
@@ -67,7 +69,7 @@ async def registrate_user(dto: UserRequestDto) -> UserResponseDto:
     await UserDAO.add(**response.model_dump())
     return response
     
-@router.delete("/delete", status_code=200)
+@router.delete("/delete", status_code=200, dependencies=SECURITY)
 async def delete_user(id: int):
     await UserDAO.delete(id)
     
@@ -79,7 +81,7 @@ async def login(response: Response, dto: UserLoginRequestDto):
 
     return {"access_token": access_token}
 
-@router.post("/me")
+@router.post("/me", dependencies=SECURITY)
 async def get_user_from_token(user: str = Depends(get_user_from_token)) -> UserResponseDto:
     return user
     
