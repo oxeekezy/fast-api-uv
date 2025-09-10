@@ -20,6 +20,14 @@ class BaseDAO:
             result = await session.execute(query)
             return result.scalars().one_or_none()
         
+        
+    @classmethod
+    async def get_by_params(cls, **filter_by):
+        async with ASYNC_SESSION_MAKER() as session:
+            query = select(cls.model).filter_by(**filter_by)
+            result = await session.execute(query)
+            return result.scalars().all()
+        
     
     @classmethod
     async def add(cls, **data):

@@ -3,6 +3,7 @@ from datetime import datetime
 from web.users.dao import UserDAO
 from web.users.user_dto import UserRequestDto, UserResponseDto
 from web.users.models import Users
+from web.exceptions import UserExistException
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -15,8 +16,25 @@ async def get_users_info():
     """
     return await UserDAO.get_all()
 
+@router.get("/get_by_params")
+async def get_users_info_by_params(login:str="", email:str="", tel: str="", age:int=0):
+    """
+    Эндпоинт получения пользователей  по параметрам
+    """
+    query_params = {}
+    if login:
+        query_params['login']=login
+    if email:
+        query_params['email']=email
+    if tel:
+        query_params['tel']=tel
+    if age:
+        query_params['age']=age
+    
+    return await UserDAO.get_by_params(**query_params)
 
-@router.get("user/{key}")
+
+@router.get("/user/{key}")
 async def get_user_info(key: int) -> UserResponseDto:
     """
     Эндпоинт получения пользователя
@@ -25,11 +43,15 @@ async def get_user_info(key: int) -> UserResponseDto:
     return await UserDAO.get_by_id(key)
 
 
-@router.post("/register")
+@router.post("/register", status_code=201)
 async def registrate_user(dto: UserRequestDto):
     """
     Эндпоинт регистрации пользователя
     """
+    
+    exsited = await UserDAO.get_by_params(email=dto.email)
+    if exsited:
+        raise UserExistException
 
     response = UserResponseDto(
         firstname=dto.firstname,
@@ -41,6 +63,7 @@ async def registrate_user(dto: UserRequestDto):
         login=dto.login,
         age=dto.age,
         reg_date=datetime.now(),
+        password=dto.password
     )
     
     await UserDAO.add(**response.model_dump())

@@ -26,6 +26,7 @@ class UserRequestDto(BaseModel):
     tel: Optional[RussianPhoneNumber]
     birthday: datetime
     login: str
+    #password: str
 
     @field_validator("login")
     @classmethod
@@ -100,6 +101,7 @@ class UserResponseDto(BaseModel):
     tel: Optional[RussianPhoneNumber]
     birthday: datetime
     login: str
+    password: str
 
     age: int
     reg_date: datetime
