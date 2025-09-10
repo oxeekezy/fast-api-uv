@@ -2,7 +2,8 @@ from fastapi import Depends, FastAPI
 from web.admin.auth import AdminAuth
 from web.admin.views import UsersAdminView
 from web.auth.scheme import get_bearer_token
-from web.users.router import router
+from web.users.router import router as user_router
+from web.courses.router import router as course_router
 from random import randint
 from time import sleep
 from asyncio import sleep as asleep
@@ -12,10 +13,9 @@ from web.admin.auth import authentication_backend
 
 
 app = FastAPI()
-app.include_router(router)
+app.include_router(user_router)
+app.include_router(course_router)
 
-
-#TODO: Добавить сюда бэкэнд из auth админа
 admin = Admin(app=app, engine=ENGINE, authentication_backend=authentication_backend)
 admin.add_view(UsersAdminView)
 

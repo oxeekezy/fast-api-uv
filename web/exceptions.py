@@ -27,3 +27,7 @@ class UserNotAuth(BaseException):
 class TokenDecodeExcept(BaseException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail="Проблема вовремя декодирования токена"
+    
+class CouseAlreadyExistException(BaseException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail="Курс с указанным именем уже существует"

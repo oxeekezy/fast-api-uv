@@ -51,6 +51,7 @@ async def registrate_user(dto: UserRequestDto) -> UserResponseDto:
     if exsited:
         raise UserExistException
     
+    #TODO: Убрать response dto из add. Тогда можно будет избавиться от пароля в response
     hashed_pwd = get_password_hash(dto.password)
     
     response = UserResponseDto(
