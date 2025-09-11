@@ -31,3 +31,7 @@ class TokenDecodeExcept(BaseException):
 class CouseAlreadyExistException(BaseException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail="Курс с указанным именем уже существует"
+    
+class CouseNotExistException(BaseException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail="Курс с указанным id не найден"

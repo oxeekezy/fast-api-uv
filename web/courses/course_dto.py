@@ -10,6 +10,7 @@ class CourseRequestDto(BaseModel):
     
     
 class CourseResponseDto(BaseModel):
+    id:int
     name: str
     desc: Optional[str]
     duration: int

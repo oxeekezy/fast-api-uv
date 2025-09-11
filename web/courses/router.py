@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from web.auth.scheme import get_bearer_token
 from web.courses.course_dto import CourseRequestDto, CourseResponseDto
 from web.courses.dao import CourseDAO
-from web.exceptions import CouseAlreadyExistException
+from web.exceptions import CouseAlreadyExistException, CouseNotExistException
 
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
@@ -46,4 +46,18 @@ async def add_course(dto: CourseRequestDto):
         raise CouseAlreadyExistException
     
     await CourseDAO.add(**dto.model_dump())
+    
+    
+@router.delete("/delete", status_code=200)
+async def delete_course(id: int):
+    await CourseDAO.delete(id)
+    
+
+@router.put("/edit")
+async def edit_course(id: int, dto: CourseRequestDto):
+    course = await CourseDAO.get_by_id(id)
+    if not course:
+        raise CouseNotExistException
+    
+    await CourseDAO.update(id, **dto.model_dump())
     
