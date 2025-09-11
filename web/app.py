@@ -4,6 +4,7 @@ from web.admin.views import CourseAdminView, UsersAdminView
 from web.auth.scheme import get_bearer_token
 from web.users.router import router as user_router
 from web.courses.router import router as course_router
+from web.images.router import router as images_router
 from random import randint
 from time import sleep
 from asyncio import sleep as asleep
@@ -15,6 +16,7 @@ from web.admin.auth import authentication_backend
 app = FastAPI()
 app.include_router(user_router)
 app.include_router(course_router)
+app.include_router(images_router)
 
 admin = Admin(app=app, engine=ENGINE, authentication_backend=authentication_backend)
 admin.add_view(UsersAdminView)
