@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 from web.admin.auth import AdminAuth
-from web.admin.views import UsersAdminView
+from web.admin.views import CourseAdminView, UsersAdminView
 from web.auth.scheme import get_bearer_token
 from web.users.router import router as user_router
 from web.courses.router import router as course_router
@@ -18,6 +18,7 @@ app.include_router(course_router)
 
 admin = Admin(app=app, engine=ENGINE, authentication_backend=authentication_backend)
 admin.add_view(UsersAdminView)
+admin.add_view(CourseAdminView)
 
 
 @app.get("/")
