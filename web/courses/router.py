@@ -92,5 +92,14 @@ async def get_course_lectors(course_id: int) -> Sequence[LectorResponseDto] | No
     Returns:
         Sequence[CourseResponseDto]: Список курсов.
     """
-    return await CourseLectorsDAO.get_course_lectors(course_id=course_id)
+    return await CourseLectorsDAO.get_lectors_for_course(course_id=course_id)
+
+@router.get("/lector/{lector_id}")
+async def get_course_lectors(lector_id: int) -> Sequence[CourseResponseDto] | None:
+    """Эндпоинт получения всех курсов
+
+    Returns:
+        Sequence[CourseResponseDto]: Список курсов.
+    """
+    return await CourseLectorsDAO.get_courses_for_lector(lector_id=lector_id)
     

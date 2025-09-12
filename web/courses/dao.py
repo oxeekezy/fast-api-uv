@@ -30,11 +30,20 @@ class CourseLectorsDAO(BaseDAO):
             await session.commit()
     
     @classmethod
-    async def get_course_lectors(cls, course_id: int):
+    async def get_lectors_for_course(cls, course_id: int):
         async with ASYNC_SESSION_MAKER() as session:
             query = select(cls.model).filter_by(course_id=course_id).options(selectinload(cls.model.user))
             result = await session.execute(query)
-            course_lectors = [x.user for x in result.scalars().all()]
+            lectors = [x.user for x in result.scalars().all()]
 
-            return course_lectors
+            return lectors
+        
+
+    @classmethod
+    async def get_courses_for_lector(cls, lector_id:int):
+        async with ASYNC_SESSION_MAKER() as session:
+            query = select(cls.model).filter_by(user_id=lector_id).options(selectinload(cls.model.course))
+            result = await session.execute(query)
+            courses = [x.course for x in result.scalars().all()]
             
+            return courses
