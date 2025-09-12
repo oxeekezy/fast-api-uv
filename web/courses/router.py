@@ -1,8 +1,8 @@
 from typing import Sequence
 from fastapi import APIRouter, Depends
 from web.auth.scheme import get_bearer_token
-from web.courses.course_dto import CourseRequestDto, CourseResponseDto
-from web.courses.dao import CourseDAO
+from web.courses.course_dto import CourseRequestDto, CourseResponseDto, LectorResponseDto
+from web.courses.dao import CourseDAO, CourseLectorsDAO
 from web.exceptions import CouseAlreadyExistException, CouseNotExistException
 
 
@@ -48,6 +48,14 @@ async def add_course(dto: CourseRequestDto):
     await CourseDAO.add(**dto.model_dump())
     
     
+@router.post("/add_lector", status_code=201)
+async def add_lector_to_course(
+    course_id: int, 
+    lector_id: int):
+    
+    await CourseLectorsDAO.add_lector(course_id=course_id, lector_id=lector_id)
+    
+    
 @router.delete("/delete", status_code=200)
 async def delete_course(id: int):
     """"Эндпоинт удаления курса
@@ -75,4 +83,14 @@ async def edit_course(id: int, dto: CourseRequestDto):
         raise CouseNotExistException
     
     await CourseDAO.update(id, **dto.model_dump())
+    
+
+@router.get("/lectors/{course_id}")
+async def get_course_lectors(course_id: int) -> Sequence[LectorResponseDto] | None:
+    """Эндпоинт получения всех курсов
+
+    Returns:
+        Sequence[CourseResponseDto]: Список курсов.
+    """
+    return await CourseLectorsDAO.get_course_lectors(course_id=course_id)
     

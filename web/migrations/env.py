@@ -13,6 +13,7 @@ from web.settings import settings
 
 from web.users.models import UserModel
 from web.courses.models import CourseModel
+from web.courses.models import CourseLectors
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 

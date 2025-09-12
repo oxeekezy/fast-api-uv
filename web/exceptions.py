@@ -35,3 +35,7 @@ class CouseAlreadyExistException(BaseException):
 class CouseNotExistException(BaseException):
     status_code = status.HTTP_404_NOT_FOUND
     detail="Курс с указанным id не найден"
+    
+class UserNotExistException(BaseException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail="Пользователь указанным id не найден"

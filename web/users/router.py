@@ -11,12 +11,15 @@ from web.exceptions import UserExistException
 from web.users.auth import auth_user, create_token, get_password_hash
 from web.users.deps import get_user_from_token
 
+from fastapi_cache.decorator import cache
+
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 SECURITY = [Depends(get_bearer_token)]
 
 @router.get("", dependencies=SECURITY)
+@cache(expire=60)
 async def get_users_info()-> Sequence[UserResponseDto]:
     """Эндпоинт получения всех пользователей
 

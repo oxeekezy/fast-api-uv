@@ -1,5 +1,6 @@
 from web.database import Base
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import relationship
 
 
 class UserModel(Base):
@@ -17,7 +18,8 @@ class UserModel(Base):
     email = Column(String, nullable=True)
     tel = Column(String, nullable=True)
     reg_date = Column(DateTime, nullable=True)
-    
     password = Column(String, nullable=False)
+    
+    course_lector = relationship("CourseLectors", uselist=True, back_populates="user")
     
     

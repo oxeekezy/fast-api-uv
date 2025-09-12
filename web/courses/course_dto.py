@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
@@ -15,3 +15,9 @@ class CourseResponseDto(BaseModel):
     desc: Optional[str]
     duration: int
     teacher: str
+    
+class LectorResponseDto(BaseModel):
+    firstname: str
+    lastname: str
+    middlename: Optional[str]
+    email: Optional[EmailStr]

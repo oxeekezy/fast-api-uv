@@ -1,7 +1,9 @@
+from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from web.admin.auth import AdminAuth
 from web.admin.views import CourseAdminView, UsersAdminView
-from web.auth.scheme import get_bearer_token
 from web.users.router import router as user_router
 from web.courses.router import router as course_router
 from web.images.router import router as images_router
@@ -11,9 +13,17 @@ from asyncio import sleep as asleep
 from sqladmin import Admin
 from web.database import ENGINE
 from web.admin.auth import authentication_backend
+from redis import asyncio as aioredis
+from web.settings import settings
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    redis = aioredis.from_url(settings.redis_url)
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
+    yield
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
+
 app.include_router(user_router)
 app.include_router(course_router)
 app.include_router(images_router)
@@ -41,3 +51,4 @@ async def test_async(id: int):
     time_to_wait = randint(3,10)
     asleep(time_to_wait)
     return {"msg": f"Задача с id: {id} завершена. Время выполнения: {time_to_wait}с."}
+
